@@ -1,0 +1,148 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("CLIENT")
+  company   String?
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  projects    Project[] @relation("ClientProjects")
+  managedProjects Project[] @relation("ManagerProjects")
+  tickets     Ticket[] @relation("ClientTickets")
+  assignedTickets Ticket[] @relation("AssignedTickets")
+  assignedDeliverables Deliverable[] @relation("AssignedDeliverables")
+  updates     Update[] @relation("AuthorUpdates")
+  comments    Comment[] @relation("AuthorComments")
+  notifications Notification[] @relation("UserNotifications")
+
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("ACTIVE")
+  startDate   DateTime
+  endDate     DateTime?
+  budget      Float?
+  clientId    String
+  managerId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  client      User     @relation("ClientProjects", fields: [clientId], references: [id])
+  manager     User?    @relation("ManagerProjects", fields: [managerId], references: [id])
+  deliverables Deliverable[]
+  tickets     Ticket[]
+  updates     Update[]
+
+  @@map("projects")
+}
+
+model Deliverable {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("PENDING")
+  dueDate     DateTime
+  completedAt DateTime?
+  projectId   String
+  assignedTo  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  project     Project  @relation(fields: [projectId], references: [id])
+  assignedUser User?   @relation("AssignedDeliverables", fields: [assignedTo], references: [id])
+
+  @@map("deliverables")
+}
+
+model Ticket {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  priority    String   @default("MEDIUM")
+  status      String   @default("OPEN")
+  category    String
+  projectId   String?
+  clientId    String
+  assignedTo  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  project     Project? @relation(fields: [projectId], references: [id])
+  client      User     @relation("ClientTickets", fields: [clientId], references: [id])
+  assignedUser User?   @relation("AssignedTickets", fields: [assignedTo], references: [id])
+  comments    Comment[]
+
+  @@map("tickets")
+}
+
+model Update {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  type      String
+  projectId String?
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  project   Project? @relation(fields: [projectId], references: [id])
+  author    User     @relation("AuthorUpdates", fields: [authorId], references: [id])
+
+  @@map("updates")
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  ticketId  String
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  author    User     @relation("AuthorComments", fields: [authorId], references: [id])
+
+  @@map("comments")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user      User     @relation("UserNotifications", fields: [userId], references: [id])
+
+  @@map("notifications")
+} 

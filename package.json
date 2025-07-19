@@ -1,0 +1,21 @@
+{
+  "name": "hr-management-system",
+  "version": "1.0.0",
+  "description": "Automated HR Management System for IT Service Companies",
+  "main": "server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "db:migrate": "cd server && npm run db:migrate",
+    "db:seed": "cd server && npm run db:seed"
+  },
+  "keywords": ["hr", "management", "dashboard", "it-services"],
+  "author": "HR Management Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
