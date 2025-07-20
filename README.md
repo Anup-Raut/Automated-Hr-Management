@@ -92,3 +92,29 @@ A **modern, full-stack HR Management System** built for IT service companies to 
 # Clone the repository
 git clone <your-repo-url>
 cd hr-management
+
+## 🛠️ Usage
+
+After cloning the repository and completing the installation steps:
+
+```bash
+git clone https://github.com/Anup-Raut/Automated-Hr-Management.git
+cd Automated-Hr-Management
+npm install
+npm run dev
+
+http://localhost:3000
+
+Automated-Hr-Management/
+│
+├── public/             # Static assets
+├── src/
+│   ├── assets/         # Images, logos, icons
+│   ├── components/     # Reusable components (Navbar, Sidebar, Cards, etc.)
+│   ├── pages/          # Page components (Login, Dashboard, Project, Ticket, etc.)
+│   ├── App.jsx         # Main App component
+│   └── main.jsx        # Entry point
+├── tailwind.config.js  # Tailwind CSS config
+├── package.json        # NPM dependencies
+└── README.md           # Project documentation
+
