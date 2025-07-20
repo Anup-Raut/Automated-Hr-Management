@@ -1,35 +1,55 @@
-# 💼 HR Management System
+# 👨‍💼 HR Management System - Centralized HR Platform
 
-A modern, full-stack HR Management System tailored for IT service companies to manage multiple client projects, deliverables, tickets, and team collaboration in one unified platform.
+![MERN](https://img.shields.io/badge/Stack-MERN-blue)
+![React](https://img.shields.io/badge/React-18.x-blue)
+![Node.js](https://img.shields.io/badge/Node.js-16%2B-green)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![TypeScript](https://img.shields.io/badge/TypeScript-Enabled-blue)
+![Tailwind](https://img.shields.io/badge/Styled%20with-TailwindCSS-38b2ac)
+
+A **modern, full-stack HR Management System** built for IT service companies to manage multiple client projects, deliverables, tickets, and enable team collaboration.
+
+🔐 Role-based access | 📊 Analytics | 🛠️ Real-time updates | 🎫 Ticketing system
 
 ---
 
+## 🔗 Demo
+
+- 🎥 **Video Demo**: [Watch on YouTube](https://youtu.be/TZ4WSzhrdxA)
+
+> _A full walkthrough of the platform functionalities and user roles._
+
+---
+
+
 ## 🚀 Features
 
-- 🔐 **User Authentication & Authorization** (JWT, role-based)
-- 📁 **Project Management** – Create, track, and manage client projects
-- 📦 **Deliverable Tracking** – Monitor tasks and milestones with deadlines
-- 🎫 **Support Tickets** – Raise and manage support/feature tickets
-- 📢 **Real-time Updates** – Get instant project updates via Socket.io
-- 📊 **Dashboard Analytics** – Visual summary of projects, tickets, and statuses
-- 📱 **Responsive Design** – Works seamlessly on desktop & mobile
+- 🔐 **User Authentication & Authorization** (JWT-based)
+- 📁 **Project & Deliverable Management**
+- 🎫 **Support Ticket System**
+- 🗞️ **Real-time Project Updates**
+- 📊 **Dashboard Analytics**
+- 📱 **Responsive Design** for mobile and desktop
 
 ---
 
 ## 🛠️ Tech Stack
 
-### 🚀 Frontend
-- React 18 + TypeScript
+### Frontend
+- React 18 (TypeScript)
 - Tailwind CSS
 - React Router
 - Axios
-- Headless UI & Heroicons
-- Socket.io Client
+- Headless UI
+- Heroicons
+- Socket.io-client
 
-### 🧠 Backend
-- Node.js + Express + TypeScript
-- Prisma ORM + SQLite (Dev) / PostgreSQL (Prod)
-- JWT Authentication
+### Backend
+- Node.js with Express
+- TypeScript
+- Prisma ORM
+- SQLite (dev) / PostgreSQL (prod-ready)
+- JWT for Authentication
 - Socket.io
 - Express Validator
 
@@ -37,28 +57,13 @@ A modern, full-stack HR Management System tailored for IT service companies to m
 
 ## 📦 Installation
 
-### 🔧 Prerequisites
-- Node.js v16+
+### Prerequisites
+- Node.js (v16 or higher)
 - npm or yarn
 
-### 🚀 Setup
+### Setup Instructions
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/<your-username>/hr-management-system.git
-cd hr-management-system
-
-# 2. Install all dependencies
-npm run install:all
-
-# 3. Set up environment variables
-cd server
-cp .env.example .env
-# Edit `.env` with your DB and JWT secret
-
-# 4. Set up the database
-npx prisma migrate dev --name init
-npx prisma generate
-
-# 5. Start the full-stack application
-npm run dev
+# Clone the repository
+git clone <your-repo-url>
+cd hr-management
