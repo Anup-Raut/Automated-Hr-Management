@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { useSocket } from '../contexts/SocketContext';
+import CreateTicketModal from '../components/CreateTicketModal';
 
 const Tickets: React.FC = () => {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { socket } = useSocket();
 
   useEffect(() => {
     fetchTickets();
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('ticket_update', (data) => {
+        console.log('Ticket update received:', data);
+        fetchTickets(); // Refresh tickets when updates are received
+      });
+
+      return () => {
+        socket.off('ticket_update');
+      };
+    }
+  }, [socket]);
 
   const fetchTickets = async () => {
     try {
@@ -19,6 +36,10 @@ const Tickets: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTicketCreated = () => {
+    fetchTickets();
   };
 
   const getPriorityColor = (priority: string) => {
@@ -56,7 +77,10 @@ const Tickets: React.FC = () => {
           <h1 className="text-2xl font-bold text-secondary-900">Support Tickets</h1>
           <p className="text-secondary-600">Manage and track support requests.</p>
         </div>
-        <button className="btn-primary flex items-center">
+        <button 
+          className="btn-primary flex items-center"
+          onClick={() => setShowCreateModal(true)}
+        >
           <PlusIcon className="w-5 h-5 mr-2" />
           New Ticket
         </button>
@@ -122,6 +146,12 @@ const Tickets: React.FC = () => {
           </table>
         </div>
       </div>
+
+      <CreateTicketModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onTicketCreated={handleTicketCreated}
+      />
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { PrismaClient } from '@prisma/client';
+import { io } from '../index';
+import { sendProjectUpdate } from '../socket/handlers';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -154,6 +156,11 @@ router.post('/', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('project_update', { type: 'created', project });
+    }
+
     res.status(201).json({ project });
   } catch (error) {
     console.error('Create project error:', error);
@@ -212,6 +219,11 @@ router.put('/:id', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('project_update', { type: 'updated', project });
+    }
+
     res.json({ project });
   } catch (error) {
     console.error('Update project error:', error);
@@ -240,6 +252,11 @@ router.delete('/:id', async (req: any, res) => {
     await prisma.project.delete({
       where: { id }
     });
+
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('project_update', { type: 'deleted', projectId: id });
+    }
 
     res.json({ message: 'Project deleted successfully' });
   } catch (error) {

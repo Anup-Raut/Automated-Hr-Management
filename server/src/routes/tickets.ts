@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { PrismaClient } from '@prisma/client';
+import { io } from '../index';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -79,6 +80,11 @@ router.post('/', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('ticket_update', { type: 'created', ticket });
+    }
+
     res.status(201).json({ ticket });
   } catch (error) {
     console.error('Create ticket error:', error);
@@ -113,6 +119,11 @@ router.put('/:id', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('ticket_update', { type: 'updated', ticket });
+    }
+
     res.json({ ticket });
   } catch (error) {
     console.error('Update ticket error:', error);
@@ -144,6 +155,11 @@ router.post('/:id/comments', [
         author: { select: { id: true, name: true, email: true } }
       }
     });
+
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('ticket_update', { type: 'comment_added', ticketId: id, comment });
+    }
 
     res.status(201).json({ comment });
   } catch (error) {

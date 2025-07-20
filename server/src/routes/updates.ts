@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import { PrismaClient } from '@prisma/client';
+import { io } from '../index';
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -12,13 +13,13 @@ router.get('/', async (req: any, res: any) => {
     let updates;
 
     if (user.role === 'CLIENT') {
-      // Get updates for client's projects
-      const clientProjects = await prisma.project.findMany({
+      // For clients, show updates from their projects
+      const userProjects = await prisma.project.findMany({
         where: { clientId: user.id },
         select: { id: true }
       });
       
-      const projectIds = clientProjects.map(p => p.id);
+      const projectIds = userProjects.map(p => p.id);
       
       updates = await prisma.update.findMany({
         where: {
@@ -80,6 +81,11 @@ router.post('/', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('update_created', { type: 'created', update });
+    }
+
     res.status(201).json({ update });
   } catch (error) {
     console.error('Create update error:', error);
@@ -111,6 +117,11 @@ router.put('/:id', [
       }
     });
 
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('update_created', { type: 'updated', update });
+    }
+
     res.json({ update });
   } catch (error) {
     console.error('Update update error:', error);
@@ -140,6 +151,11 @@ router.delete('/:id', async (req: any, res: any) => {
     await prisma.update.delete({
       where: { id }
     });
+
+    // Emit socket event for real-time updates
+    if (io) {
+      io.emit('update_created', { type: 'deleted', updateId: id });
+    }
 
     res.json({ message: 'Update deleted successfully' });
   } catch (error) {

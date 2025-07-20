@@ -5,6 +5,56 @@ import { PrismaClient } from '@prisma/client';
 const router = Router();
 const prisma = new PrismaClient();
 
+// Get all deliverables (filtered by user role)
+router.get('/', async (req: any, res: any) => {
+  try {
+    const { user } = req;
+    let deliverables;
+
+    if (user.role === 'CLIENT') {
+      // For clients, get deliverables from their projects
+      const userProjects = await prisma.project.findMany({
+        where: { clientId: user.id },
+        select: { id: true }
+      });
+      
+      const projectIds = userProjects.map(p => p.id);
+      
+      deliverables = await prisma.deliverable.findMany({
+        where: {
+          projectId: { in: projectIds }
+        },
+        include: {
+          project: {
+            select: { id: true, name: true }
+          },
+          assignedUser: {
+            select: { id: true, name: true, email: true }
+          }
+        },
+        orderBy: { dueDate: 'asc' }
+      });
+    } else {
+      deliverables = await prisma.deliverable.findMany({
+        include: {
+          project: {
+            select: { id: true, name: true }
+          },
+          assignedUser: {
+            select: { id: true, name: true, email: true }
+          }
+        },
+        orderBy: { dueDate: 'asc' }
+      });
+    }
+
+    res.json({ deliverables });
+  } catch (error) {
+    console.error('Get deliverables error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Get all deliverables for a project
 router.get('/project/:projectId', async (req: any, res: any) => {
   try {

@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { useSocket } from '../contexts/SocketContext';
+import CreateUpdateModal from '../components/CreateUpdateModal';
 
 const Updates: React.FC = () => {
   const [updates, setUpdates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { socket } = useSocket();
 
   useEffect(() => {
     fetchUpdates();
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('update_created', (data) => {
+        console.log('Update created received:', data);
+        fetchUpdates(); // Refresh updates when new ones are created
+      });
+
+      return () => {
+        socket.off('update_created');
+      };
+    }
+  }, [socket]);
 
   const fetchUpdates = async () => {
     try {
@@ -21,11 +38,15 @@ const Updates: React.FC = () => {
     }
   };
 
+  const handleUpdateCreated = () => {
+    fetchUpdates();
+  };
+
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'ANNOUNCEMENT': return 'bg-red-100 text-red-800';
-      case 'MILESTONE': return 'bg-green-100 text-green-800';
       case 'PROGRESS': return 'bg-blue-100 text-blue-800';
+      case 'MILESTONE': return 'bg-green-100 text-green-800';
+      case 'ANNOUNCEMENT': return 'bg-purple-100 text-purple-800';
       case 'GENERAL': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
@@ -46,7 +67,10 @@ const Updates: React.FC = () => {
           <h1 className="text-2xl font-bold text-secondary-900">Project Updates</h1>
           <p className="text-secondary-600">Stay informed about project progress and announcements.</p>
         </div>
-        <button className="btn-primary flex items-center">
+        <button 
+          className="btn-primary flex items-center"
+          onClick={() => setShowCreateModal(true)}
+        >
           <PlusIcon className="w-5 h-5 mr-2" />
           New Update
         </button>
@@ -86,6 +110,12 @@ const Updates: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <CreateUpdateModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onUpdateCreated={handleUpdateCreated}
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useSocket } from '../contexts/SocketContext';
 import {
   FolderIcon,
   TicketIcon,
@@ -27,10 +28,37 @@ const Dashboard: React.FC = () => {
     upcomingDeadlines: []
   });
   const [loading, setLoading] = useState(true);
+  const { socket } = useSocket();
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      // Listen for various updates to refresh dashboard data
+      socket.on('project_update', () => {
+        console.log('Project update received, refreshing dashboard');
+        fetchDashboardData();
+      });
+
+      socket.on('ticket_update', () => {
+        console.log('Ticket update received, refreshing dashboard');
+        fetchDashboardData();
+      });
+
+      socket.on('update_created', () => {
+        console.log('Update created, refreshing dashboard');
+        fetchDashboardData();
+      });
+
+      return () => {
+        socket.off('project_update');
+        socket.off('ticket_update');
+        socket.off('update_created');
+      };
+    }
+  }, [socket]);
 
   const fetchDashboardData = async () => {
     try {
@@ -141,15 +169,19 @@ const Dashboard: React.FC = () => {
             </Link>
           </div>
           <div className="space-y-4">
-            {stats.recentUpdates.map((update: any) => (
-              <div key={update.id} className="border-l-4 border-primary-500 pl-4">
-                <p className="font-medium text-secondary-900">{update.title}</p>
-                <p className="text-sm text-secondary-600 mt-1">{update.content}</p>
-                <p className="text-xs text-secondary-500 mt-2">
-                  by {update.author.name} • {new Date(update.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-            ))}
+            {stats.recentUpdates.length > 0 ? (
+              stats.recentUpdates.map((update: any) => (
+                <div key={update.id} className="border-l-4 border-primary-500 pl-4">
+                  <p className="font-medium text-secondary-900">{update.title}</p>
+                  <p className="text-sm text-secondary-600 mt-1">{update.content}</p>
+                  <p className="text-xs text-secondary-500 mt-2">
+                    by {update.author.name} • {new Date(update.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-secondary-500 text-sm">No recent updates</p>
+            )}
           </div>
         </div>
 
@@ -162,22 +194,26 @@ const Dashboard: React.FC = () => {
             </Link>
           </div>
           <div className="space-y-4">
-            {stats.upcomingDeadlines.map((deliverable: any) => (
-              <div key={deliverable.id} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
-                <div>
-                  <p className="font-medium text-secondary-900">{deliverable.name}</p>
-                  <p className="text-sm text-secondary-600">{deliverable.project?.name}</p>
+            {stats.upcomingDeadlines.length > 0 ? (
+              stats.upcomingDeadlines.map((deliverable: any) => (
+                <div key={deliverable.id} className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-secondary-900">{deliverable.name}</p>
+                    <p className="text-sm text-secondary-600">{deliverable.project?.name}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-secondary-900">
+                      {new Date(deliverable.dueDate).toLocaleDateString()}
+                    </p>
+                    <p className="text-xs text-secondary-500">
+                      {Math.ceil((new Date(deliverable.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days left
+                    </p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-secondary-900">
-                    {new Date(deliverable.dueDate).toLocaleDateString()}
-                  </p>
-                  <p className="text-xs text-secondary-500">
-                    {Math.ceil((new Date(deliverable.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days left
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-secondary-500 text-sm">No upcoming deadlines</p>
+            )}
           </div>
         </div>
       </div>

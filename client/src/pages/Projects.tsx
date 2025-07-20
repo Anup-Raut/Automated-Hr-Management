@@ -2,14 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { PlusIcon } from '@heroicons/react/24/outline';
+import { useSocket } from '../contexts/SocketContext';
+import CreateProjectModal from '../components/CreateProjectModal';
 
 const Projects: React.FC = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { socket } = useSocket();
 
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('project_update', (data) => {
+        console.log('Project update received:', data);
+        fetchProjects(); // Refresh projects when updates are received
+      });
+
+      return () => {
+        socket.off('project_update');
+      };
+    }
+  }, [socket]);
 
   const fetchProjects = async () => {
     try {
@@ -20,6 +37,10 @@ const Projects: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleProjectCreated = () => {
+    fetchProjects();
   };
 
   if (loading) {
@@ -37,7 +58,10 @@ const Projects: React.FC = () => {
           <h1 className="text-2xl font-bold text-secondary-900">Projects</h1>
           <p className="text-secondary-600">Manage your client projects and deliverables.</p>
         </div>
-        <button className="btn-primary flex items-center">
+        <button 
+          className="btn-primary flex items-center"
+          onClick={() => setShowCreateModal(true)}
+        >
           <PlusIcon className="w-5 h-5 mr-2" />
           New Project
         </button>
@@ -85,6 +109,12 @@ const Projects: React.FC = () => {
           </Link>
         ))}
       </div>
+
+      <CreateProjectModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onProjectCreated={handleProjectCreated}
+      />
     </div>
   );
 };
