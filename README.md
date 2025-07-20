@@ -21,6 +21,28 @@ A **modern, full-stack HR Management System** built for IT service companies to 
 
 ---
 
+## 📸 Screenshots
+
+### 🔑 Login Page
+![Login Page](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(177).png)
+
+### 🏠 Home Dashboard
+![Home Dashboard](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(178).png)
+
+### 📢 Updates Section
+![Updates Section](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(179).png)
+
+### 📁 Project Overview
+![Project Overview](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(180).png)
+
+### 📋 Deliverables
+![Deliverables](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(181).png)
+
+### 🧾 Ticket System
+![Ticket System](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(182).png)
+
+---
+
 
 ## 🚀 Features
 
