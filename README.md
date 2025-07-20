@@ -20,28 +20,31 @@ A **modern, full-stack HR Management System** built for IT service companies to 
 > _A full walkthrough of the platform functionalities and user roles._
 
 ---
-
 ## 📸 Screenshots
 
 ### 🔑 Login Page
-![Login Page](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(177).png)
-
-### 🏠 Home Dashboard
-![Home Dashboard](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(178).png)
-
-### 📢 Updates Section
-![Updates Section](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(179).png)
-
-### 📁 Project Overview
-![Project Overview](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(180).png)
-
-### 📋 Deliverables
-![Deliverables](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(181).png)
-
-### 🧾 Ticket System
-![Ticket System](https://github.com/Anup-Raut/Automated-Hr-Management/assets/Anup-Raut/Screenshot%20(182).png)
+![Login Page](https://github.com/user-attachments/assets/f334c4c5-16f1-4cec-8031-7f8bd24591da)
 
 ---
+
+### 🏠 Home Dashboard
+![Home Dashboard](https://github.com/user-attachments/assets/dfed7388-7070-4b0d-97c0-87db17c3b0ec)
+
+---
+
+### 📢 Updates Section
+![Updates Section](https://github.com/user-attachments/assets/4d64f45d-a235-43d8-8341-0ed36fb289eb)
+
+---
+
+### 📁 Project Overview
+![Project Overview](https://github.com/user-attachments/assets/04e5dddc-ad46-45ad-a5d5-dd18d6891de5)
+
+---
+
+### 🧾 Ticket System
+![Ticket System](https://github.com/user-attachments/assets/639c223e-4123-43d5-90d6-197c743a650e)
+
 
 
 ## 🚀 Features
